@@ -19,7 +19,7 @@
   "author": "Bogdan Darius",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/linnify/typeorm-factory.git"
+    "url": "git+https://github.com/danielsoheil/typeorm-betterfactory.git"
   },
   "keywords": [
     "typeorm",
@@ -29,7 +29,7 @@
     "factories",
     "tests"
   ],
-  "homepage": "https://github.com/linnify/typeorm-factory#readme",
+  "homepage": "https://github.com/danielsoheil/typeorm-betterfactory#readme",
   "license": "ISC",
   "peerDependencies": {
     "typeorm": "^0.3.16"

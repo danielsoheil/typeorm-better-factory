@@ -1,5 +1,5 @@
 {
-  "name": "@linnify/typeorm-factory",
+  "name": "@danielsoheil/typeorm-betterfactory",
   "version": "1.0.12",
   "description": "Factory for typeorm",
   "main": "lib/index.js",

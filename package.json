@@ -1,5 +1,5 @@
 {
-  "name": "@danielsoheil/typeorm-betterfactory",
+  "name": "@danielsoheil/typeorm-better-factory",
   "version": "1.1.0",
   "description": "Factory for typeorm",
   "main": "lib/index.js",
@@ -19,7 +19,7 @@
   "author": "Bogdan Darius",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/danielsoheil/typeorm-betterfactory.git"
+    "url": "git+https://github.com/danielsoheil/typeorm-better-factory.git"
   },
   "keywords": [
     "typeorm",
@@ -29,7 +29,7 @@
     "factories",
     "tests"
   ],
-  "homepage": "https://github.com/danielsoheil/typeorm-betterfactory#readme",
+  "homepage": "https://github.com/danielsoheil/typeorm-better-factory#readme",
   "license": "ISC",
   "peerDependencies": {
     "typeorm": "^0.3.16"

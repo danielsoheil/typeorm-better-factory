@@ -1,13 +1,16 @@
-import { getRepository } from 'typeorm';
+import { DataSource, EntityManager, FindOptionsWhere } from 'typeorm';
 import { SubFactory } from './subfactory';
 import { Constructable } from './types';
 import { Sequence } from './sequence';
 import { FactoryStorage } from './factory-storage';
 
 export abstract class Factory<T> {
+  #dataSource: DataSource | EntityManager;
   abstract get entity(): Constructable<T>;
 
-  constructor() {}
+  constructor(dataSource: DataSource | EntityManager) {
+    this.#dataSource = dataSource;
+  }
 
   async create(values: Partial<T> = {}): Promise<T> {
     if (this.getOrCreate().length !== 0) {
@@ -18,7 +21,7 @@ export abstract class Factory<T> {
     }
 
     const entity: T = await this.createEntity(values);
-    const savedEntity = getRepository(this.entity).save(entity);
+    const savedEntity = this.#dataSource.getRepository(this.entity).save(entity);
 
     const storage = FactoryStorage.storage;
     const postGenerators = storage.getPostGenerators(this.constructor.name);
@@ -32,21 +35,21 @@ export abstract class Factory<T> {
   async createMany(count: number, values: Partial<T> = {}): Promise<T[]> {
     const entities: T[] = await Promise.all(Array.from({ length: count }).map(() => this.createEntity(values)));
 
-    return getRepository(this.entity).save(entities);
+    return this.#dataSource.getRepository(this.entity).save(entities);
   }
 
-  protected getOrCreate(): string[] {
+  protected getOrCreate(): (keyof T)[] {
     return [];
   }
 
   private async getExistingEntity(values: Partial<T>) {
-    const whereClauses: { [key: string]: any } = {};
+    const whereClauses: FindOptionsWhere<T> = {};
 
     this.getOrCreate().forEach((key) => {
-      whereClauses[key] = values[key as keyof T] ? values[key as keyof T] : (this as any)[key];
+      whereClauses[key] = values[key] ? values[key] : (this as any)[key];
     });
 
-    return getRepository(this.entity).findOne({ where: whereClauses });
+    return this.#dataSource.getRepository(this.entity).findOne({ where: whereClauses });
   }
 
   private async createEntity(values: Partial<T>): Promise<T> {

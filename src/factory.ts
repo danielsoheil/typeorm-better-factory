@@ -58,7 +58,7 @@ export abstract class Factory<T> {
     await Promise.all(
       Object.entries(this).map(async ([key, value]) => {
         const _value = Object.prototype.hasOwnProperty.call(values, key) ? values[key as keyof T] : value;
-        const entityValue = await Factory.getEntityValue(_value);
+        const entityValue = await this.getEntityValue(_value);
         Object.assign(entity, { [key]: entityValue });
       }),
     );
@@ -66,9 +66,10 @@ export abstract class Factory<T> {
     return entity;
   }
 
-  private static async getEntityValue(value: unknown) {
+  private async getEntityValue(value: unknown) {
     if (value instanceof SubFactory) {
-      return value.factory.create(value.values);
+      const subFactory = value.newFactory(this.#dataSource);
+      return subFactory.create(value.values);
     } else if (value instanceof Sequence) {
       return value.nextValue;
     } else {

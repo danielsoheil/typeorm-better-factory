@@ -32,7 +32,7 @@ export abstract class Factory<T extends ObjectLiteral> {
     return savedEntity;
   }
 
-  async createMany(count: number, values: Partial<T> = {}): Promise<T[]> {
+  async createMany(count: number, values: DeepPartial<T> = {}): Promise<T[]> {
     const entities: T[] = await Promise.all(Array.from({ length: count }).map(() => this.createEntity(values)));
 
     return this.#dataSource.getRepository(this.entity).save(entities);

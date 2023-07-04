@@ -1,10 +1,10 @@
-import { DataSource, EntityManager, FindOptionsWhere } from 'typeorm';
-import { SubFactory } from './subfactory';
-import { Constructable } from './types';
-import { Sequence } from './sequence';
+import { DataSource, EntityManager, FindOptionsWhere, ObjectLiteral } from 'typeorm';
 import { FactoryStorage } from './factory-storage';
+import { Sequence } from './sequence';
+import { SubFactory } from './subfactory';
+import { Constructable, DeepPartial } from './types';
 
-export abstract class Factory<T> {
+export abstract class Factory<T extends ObjectLiteral> {
   #dataSource: DataSource | EntityManager;
   abstract get entity(): Constructable<T>;
 
@@ -12,7 +12,7 @@ export abstract class Factory<T> {
     this.#dataSource = dataSource;
   }
 
-  async create(values: Partial<T> = {}): Promise<T> {
+  async create(values: DeepPartial<T> = {}): Promise<T> {
     if (this.getOrCreate().length !== 0) {
       const existingEntity = await this.getExistingEntity(values);
       if (existingEntity) {
@@ -42,17 +42,17 @@ export abstract class Factory<T> {
     return [];
   }
 
-  private async getExistingEntity(values: Partial<T>) {
+  private async getExistingEntity(values: DeepPartial<T>) {
     const whereClauses: FindOptionsWhere<T> = {};
 
     this.getOrCreate().forEach((key) => {
       whereClauses[key] = values[key] ? values[key] : (this as any)[key];
     });
 
-    return this.#dataSource.getRepository(this.entity).findOne({ where: whereClauses });
+    return this.#dataSource.getRepository<T>(this.entity).findOne({ where: whereClauses });
   }
 
-  private async createEntity(values: Partial<T>): Promise<T> {
+  private async createEntity(values: DeepPartial<T>): Promise<T> {
     const entity: T = new this.entity();
 
     await Promise.all(

@@ -3,8 +3,8 @@ module.exports = {
   maxWorkers: 1,
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/__tests__/**/*.test.ts'],
-  setupFilesAfterEnv: ['./__tests__/setup/jest.setup.ts'],
-  coveragePathIgnorePatterns: ['./node_modules', './__tests__'],
-  "collectCoverage":true
+  testMatch: ['**/test/**/*.test.ts'],
+  setupFilesAfterEnv: ['./test/setup/jest.setup.ts'],
+  coveragePathIgnorePatterns: ['./node_modules', './test'],
+  collectCoverage: true,
 };

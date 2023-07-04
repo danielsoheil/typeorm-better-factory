@@ -7,14 +7,17 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
-    "codecov": "./node_modules/.bin/codecov",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint .",
+    "lint:quiet": "eslint . --quiet",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
+    "format:check": "prettier --write \"src/**/*.{ts,js}\"",
+    "check": "tsc --noEmit",
     "prepublish": "tsc -p tsconfig.build.json",
     "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "ci": "npm run format:check && npm run lint:quiet && npm run check"
   },
   "author": "Bogdan Darius",
   "repository": {
@@ -39,7 +42,6 @@
     "@types/sinon": "^9.0.10",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
-    "codecov": "^3.8.1",
     "eslint": "^7.19.0",
     "jest": "^29.5.0",
     "prettier": "^2.2.1",
